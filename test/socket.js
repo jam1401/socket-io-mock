@@ -28,6 +28,21 @@ describe('Utils: Socket', function(){
     socket.socketClient.emit("test", eventPayload)
   })
 
+  it('should invoke a callback if provided', function(done) {
+    socket.on("test", function(payload, callback) {
+      callback = callback || function () {
+
+      };
+
+      callback('success');
+    });
+
+    socket.socketClient.emitWithCallback("test", eventPayload, function(result) {
+      result.should.be.equal('success');
+      done();
+    });
+  });
+
   it('should fire event on the client side when on() is assigned', function(done) {
     socket.socketClient.on("test", function(payload) {
       payload.should.have.property('never')

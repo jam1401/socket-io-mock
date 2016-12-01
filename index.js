@@ -33,6 +33,11 @@ function SocketClient(socketMock) {
         callback(socketMock.emitEvent(eventKey, payload))
     }
 
+    this.emitWithCallback = function(eventKey, payload, realcallback, callback) {
+      callback = callback || function() { return true }
+      callback(socketMock.emitEventWithCallback(eventKey, payload, realcallback))
+    }
+
     /**
      * Fire an event to the server
      * @param  {string}   eventKey -- The event key that needs to be attached
@@ -74,6 +79,14 @@ function SocketMock () {
             return this.eventCallbacks[eventKey](createPayload(payload))
         }
     }
+
+  this.emitEventWithCallback = function(eventKey, payload, callback) {
+    if (this.eventCallbacks[eventKey]) {
+      debug("Event %s on server side is dispatched with payload %s", eventKey, JSON.stringify(payload))
+
+      return this.eventCallbacks[eventKey](createPayload(payload), callback)
+    }
+  }
 
     /**
      * Register on every event that the server sends
