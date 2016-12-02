@@ -70,6 +70,16 @@ describe('Utils: Socket', function(){
 
   })
 
+  it('Should do a broad cast to registered clients', function (done) {
+    socket.socketClient.on("foo", function(payload) {
+      payload.should.be.equal('bar');
+      done();
+    });
+
+
+    socket.broadcast.emit("foo", "bar");
+  });
+
   it('Should remove a room in `rooms` when leave() is called', function(done) {
 
     var anotherRoom = 'anotherroom';

@@ -3,6 +3,7 @@
 var debug = require('debug')('chat:tests:fixtures:socketmock')
 
 var createPayload = function(object) {
+    if(!object) return undefined;
     return JSON.parse(JSON.stringify(object))
 }
 
@@ -119,7 +120,16 @@ function SocketMock () {
         this.eventCallbacks[eventKey] = callback
     }
 
-    /**
+  /**
+   * Broadcast to event
+   * @param {string} event name
+   * @param {object|string} payload
+   */
+  this.broadcast.emit = function(eventKey, payload) {
+    self.socketClient.fireEvent(eventKey, payload)
+  }
+
+  /**
      * Broadcast to room
      * @param  {string} roomKey the roomkey which need to be attached to
      */
