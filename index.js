@@ -84,8 +84,12 @@ function SocketMock () {
   this.emitEventWithCallback = function(eventKey, payload, callback) {
     if (this.eventCallbacks[eventKey]) {
       debug("Event %s on server side is dispatched with payload %s", eventKey, JSON.stringify(payload))
+      if(payload) {
+        return this.eventCallbacks[eventKey](createPayload(payload), callback)
+      } else {
+        return this.eventCallbacks[eventKey](callback)
+      }
 
-      return this.eventCallbacks[eventKey](createPayload(payload), callback)
     }
   }
 

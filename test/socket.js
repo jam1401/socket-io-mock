@@ -43,6 +43,21 @@ describe('Utils: Socket', function(){
     });
   });
 
+  it('should invoke a callback if provided without payload', function(done) {
+    socket.on("test", function(callback) {
+      callback = callback || function () {
+
+          };
+
+      callback('success');
+    });
+
+    socket.socketClient.emitWithCallback("test", undefined, function(result) {
+      result.should.be.equal('success');
+      done();
+    });
+  });
+
   it('should fire event on the client side when on() is assigned', function(done) {
     socket.socketClient.on("test", function(payload) {
       payload.should.have.property('never')
